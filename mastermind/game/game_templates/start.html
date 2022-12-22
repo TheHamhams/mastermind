@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="p-5">
+        <h2>Choose your difficulty</h2>
+        <br>
+        <a  href="{{ url_for('game.run', num=3) }}">
+            <button>Easy</button>
+        </a>
+        <a  href="{{ url_for('game.run', num=4) }}">
+            <button>Normal</button>
+        </a>
+        <a  href="{{ url_for('game.run', num=5) }}">
+            <button>Hard</button>
+        </a>
+    </div>
+{% endblock content %}

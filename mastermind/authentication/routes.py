@@ -14,6 +14,13 @@ def admin():
     result = users_schema.dump(users)
     return jsonify(result)
 
+@auth.route('/admin/<string:id>', methods=['DELETE'])
+def delete(id):
+    user = User.query.filter_by(username = id).delete()
+    
+    db.session.commit()
+    return jsonify({})
+
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
     

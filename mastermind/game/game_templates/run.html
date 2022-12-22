@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-5">
+    <div class="container">
+        <h3>Guesses Left: {{ guesses }}</h3>
+        <h3>Solution: {{ solution }}</h3>
+    </div>
+
+    <form method="POST" class="container">
+        <input type="number" name="num1" id="num1" value="0" min="0", max="8">
+        <input type="number" name="num2" id="num2" value="0" min="0", max="8">
+        <input type="number" name="num3" id="num3" value="0" min="0", max="8">
+        {% if num > 3 %}
+        <input type="number" name="num4" id="num4" value="0" min="0", max="8">
+        {% endif %}
+        {% if num > 4 %}
+        <input type="number" name="num5" id="num5" value="0" min="0", max="8">
+        {% endif %}
+        <br>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+    <div class="container">
+        Previous Guesses:
+        {% for attempt in attempts %}
+            <br>
+            {{ attempt }}
+        {% endfor %}
+    </div>
+</div>
+{% endblock content %}

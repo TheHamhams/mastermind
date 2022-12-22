@@ -12,8 +12,3 @@ def home():
 
     return render_template('home.html', title="Home", user=current_user)
 
-@site.route('/game', methods=['GET', 'POST'])
-@login_required 
-def game():
-    
-    return render_template('game.html', title='Game', user=current_user)
