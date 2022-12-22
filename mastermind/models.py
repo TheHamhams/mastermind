@@ -1,7 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager
 from flask_marshmallow import Marshmallow
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
 from uuid import uuid4
 
 login_manager = LoginManager()
@@ -10,7 +10,7 @@ ma = Marshmallow()
 
 @login_manager.user_loader
 def load_user(user_id):
-    return User.query.get(int(user_id))
+    return User.query.get(user_id)
 
 class User(db.Model, UserMixin):
     id = db.Column(db.String, primary_key = True)
@@ -24,20 +24,17 @@ class User(db.Model, UserMixin):
         self.id = self.set_id()
         self.username = username
         self.email = email
-        self.password = self.set_password(password)
-        
+        self.password = generate_password_hash(password)
+    
     def set_id(self):
         return str(uuid4)
-    
-    def set_password(self, password):
-        self.pw_hash = generate_password_hash(password)
-        
+
     def __repr__(self):
         return f"{self.username}, {self.email}"
     
 class UserSchema(ma.Schema):
     class Meta:
-        fields = ['id', 'username', 'email', 'active', 'current']
+        fields = ['id', 'username', 'email', 'password', 'active', 'current']
         
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
