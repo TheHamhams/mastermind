@@ -52,3 +52,9 @@ class Scores(db.Model):
     
     def set_id(self):
         return str(uuid3)
+    
+class ScoresSchema(ma.Schema):
+    class Meta:
+        fields = ['score']
+        
+scores_schema = ScoresSchema(many=True)

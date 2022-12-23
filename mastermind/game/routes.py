@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from mastermind.models import User, Scores, db
+from mastermind.models import User, Scores, db, scores_schema
 from sqlalchemy import func
 import requests
 import json
+import dataset
+# from stuf import stuf
 
 game = Blueprint('game', __name__, template_folder='game_templates')
 
@@ -97,23 +99,54 @@ def run(num):
 def win(score):
     global guesses
     new_high_score = False
+    new_personal_high = False
+    new_score_id = 0
     user = User.query.filter_by(email=current_user.email).first()
+    leaderboard = []
+    con = dataset.connect('sqlite:///instance\site.db')
+    scores = con.query('SELECT username, score, id FROM scores ORDER BY score DESC')
+    for row in scores:
+        leaderboard.append([row['username'], row['score'], row['id']])
     
     # Check for user high score
     if score > user.high_score:
         user.high_score=score
         db.session.commit()
+        new_personal_high=True
     
     # Check if there is room on the leaderboard
-    if db.session.query(Scores).count() < 5:
+    if len(leaderboard) < 5:
         new = Scores(username=user.username, user_id=user.id, score=score)
         db.session.add(new)
         db.session.commit()
         new_high_score = True
-    
+        new_score_id = new.id
+        
+    # Check leaderboard if it is full
+    else:
+        
+        # Remove lowest leaderboard score if user score is larger
+        if score > leaderboard[-1][1]:
+            removed = leaderboard.pop()
+            
+            # Add new score to db and remove lowest score
+            new_leaderboard_score = Scores(user.username, user.id, score)
+            db.session.add(new_leaderboard_score)
+            leaderboard_score_to_remove = Scores.query.get(removed[2])
+            db.session.delete(leaderboard_score_to_remove)
+            db.session.commit()
+            new_score_id = new_leaderboard_score.id
+            new_high_score=True
+            
+            # Insert user score into leaderboard
+            for idx in range(4):
+                if score > leaderboard[idx][1]:
+                    leaderboard.insert(idx, [user.username, score, new_score_id])
+            
     # Determine total guesses for front end
     count = 10 - guesses
-    return render_template('win.html', user=current_user, title='WINNER', count=count, score=score, new_high_score=new_high_score)
+    
+    return render_template('win.html', user=current_user, title='WINNER', count=count, score=score, new_high_score=new_high_score, leaderboard=leaderboard, new_personal_high=new_personal_high, new_score_id=new_score_id)
 
 # Loss condition
 @game.route('/lose')

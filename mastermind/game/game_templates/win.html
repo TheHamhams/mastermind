@@ -3,11 +3,33 @@
 {% block content %}
     <div class="container p-5">
         <h1>YOU WIN!</h1>
+        
         {% if count == 1 %}
             <h2>You found the solution with your first guess!</h2>
         {% else %}
             <h2>You found the solution with {{ count }} guesses!</h2>
         {% endif %}
+
+        <h2>Score: {{ score }}</h2>
+        
+        {% if new_personal_high %}
+            <h2>You got a new personal high score!</h2>
+        {% endif %}
+
+        {% if new_high_score %}
+            <h2>Congradulations! You made it on the leaderboard!</h2>
+            
+        {% endif %}
+
+{{ leaderboard }}
+{{ new_score_id }}
+        {% for spot in leaderboard %}
+            {% if spot[2] == new_score_id %}
+                <p style="color: chartreuse;">{{ spot[0] }}: {{ spot[1] }} new</p>
+            {% else %}
+                <p>{{ spot[0] }} : {{ spot[1] }}</p>
+            {% endif %}
+        {% endfor %}
 
     </div>
 {% endblock content %}

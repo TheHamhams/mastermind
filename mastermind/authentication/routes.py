@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
-from mastermind.models import User, db, check_password_hash, users_schema
+from mastermind.models import User, db, check_password_hash, users_schema, Scores
 
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
@@ -13,6 +13,11 @@ def admin():
     
     result = users_schema.dump(users)
     return jsonify(result)
+
+@auth.route('/admin/scores/<int:id>', methods=['DELETE'])
+def delete_score(id):
+    score = Scores.query.get(id).delete()
+    db.session.commit()
 
 @auth.route('/admin/<string:id>', methods=['DELETE'])
 def delete(id):
