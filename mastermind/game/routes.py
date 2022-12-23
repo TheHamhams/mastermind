@@ -13,12 +13,23 @@ game = Blueprint('game', __name__, template_folder='game_templates')
 guesses = 10
 solution = []
 attempts = []
+leaderboard = []
 
+# Gloval functions
 def reset():
     global solution, guesses, attempts
     guesses = 10
     solution = []
     attempts = []
+    
+def create_leaderboard():
+    global leaderboard
+    leaderboard = []
+    con = dataset.connect('sqlite:///instance\site.db')
+    scores = con.query('SELECT username, score, id FROM scores ORDER BY score DESC')
+    for row in scores:
+        leaderboard.append([row['username'], row['score'], row['id']])
+    return leaderboard
 
 @game.route('/start', methods=['GET', 'POST'])
 @login_required 
@@ -97,16 +108,12 @@ def run(num):
 @game.route('/win/<int:score>')
 @login_required
 def win(score):
-    global guesses
+    global guesses, leaderboard
     new_high_score = False
     new_personal_high = False
     new_score_id = 0
     user = User.query.filter_by(email=current_user.email).first()
-    leaderboard = []
-    con = dataset.connect('sqlite:///instance\site.db')
-    scores = con.query('SELECT username, score, id FROM scores ORDER BY score DESC')
-    for row in scores:
-        leaderboard.append([row['username'], row['score'], row['id']])
+    create_leaderboard()
     
     # Check for user high score
     if score > user.high_score:
