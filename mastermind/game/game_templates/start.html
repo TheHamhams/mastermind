@@ -2,16 +2,43 @@
 
 {% block content %}
     <div class="p-5">
-        <h2>Choose your difficulty</h2>
+        <h1 class="text-center">Choose your difficulty</h1>
         <br>
-        <a  href="{{ url_for('game.run', num=3) }}">
-            <button>Easy</button>
-        </a>
-        <a  href="{{ url_for('game.run', num=4) }}">
-            <button>Normal</button>
-        </a>
-        <a  href="{{ url_for('game.run', num=5) }}">
-            <button>Hard</button>
-        </a>
+        <div class="container d-flex">
+            <!-- Easy -->
+            <div class="column container border">
+                <div class="row text-center my-2">
+                    <a  href="{{ url_for('game.run', num=3) }}">
+                        <button class="btn btn-success">Easy</button>
+                    </a>
+                </div>
+                <div class="row text-center">
+                    <h5>Small victories are better than none.</h5>
+                </div>
+            </div>
+            <!-- Normal -->
+            <div class="column container border">
+                <div class="row text-center my-2">
+                    <a href="{{ url_for('game.run', num=4) }}">
+                        <button class="btn btn-warning">Normal</button>
+                    </a>
+                </div>
+                <div class="row text-center">
+                    <h5>Nothing wrong with normal.</h5>
+                </div>
+            </div>
+            <!-- Hard -->
+            <div class="column container border">
+                <div class="row text-center my-2">
+                    <a  href="{{ url_for('game.run', num=5) }}">
+                        <button class="btn btn-danger">Hard</button>
+                    </a>
+                </div>
+                <div class="row text-center">
+                    <h5>Beyond the recommended dosage!</h5>
+                </div>
+            </div>
+
+        </div>
     </div>
 {% endblock content %}
