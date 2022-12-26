@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, flash, jsonify, redirect, url_for
 from flask_login import login_required, current_user
-from mastermind.models import User, Scores, db, scores_schema
+from mastermind.models import User, Scores, db
 from sqlalchemy import func
 import requests
 import json
@@ -149,7 +149,6 @@ def win(score):
             new_high_score=True
             
             # Insert user score into leaderboard
-            
             leaderboard.append([user.username, score, new_score_id])
             leaderboard.sort(key=lambda x: x[1], reverse=True)
             

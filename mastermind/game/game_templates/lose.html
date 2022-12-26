@@ -1,8 +1,16 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container p-5">
-        <h1>YOU LOSE!!</h1>
+<div class="m-5">
+    <div class="container col-6 text-center">
+        <h1 class="p-3">YOU LOSE!!</h1>
         <h3>Solution: {{ solution }}</h3>
     </div>
+    <div class="container text-center my-5">
+        <h2 class="pb-4">Try again?</h2>
+        <a href="{{ url_for('game.start') }}">
+            <button class="btn btn-primary">Start</button>
+        </a>
+    </div>
+</div>
 {% endblock content %}
