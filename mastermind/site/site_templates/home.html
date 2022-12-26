@@ -39,6 +39,7 @@
             <table class="table table-bordered">
                 <thead class="thead-dark">
                     <tr>
+                        <th scope="col">Rank</th>
                         <th scope="col">Username</th>
                         <th scope="col">Score</th>
                     </tr>
@@ -46,13 +47,14 @@
                 <tbody>
                     {% for spot in leaderboard %}
                         <tr>
+                            <td>{{ loop.index0 + 1 }}</td>
                             <td>{{ spot[0] }}</td>
                             <td>{{ spot[1] }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
-                </table>
-                </div
+            </table>
+        </div>
 
     </div>
 

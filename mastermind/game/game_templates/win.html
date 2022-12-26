@@ -2,36 +2,67 @@
 
 {% block content %}
     <div class="container p-5">
-        <h1>YOU WIN!</h1>
+        <div class="container text-center">
+            <h1>YOU WIN!</h1>
+        </div>
         <!-- Results -->
-        {% if count == 1 %}
-            <h2>You found the solution with your first guess!</h2>
-        {% else %}
-            <h2>You found the solution with {{ count }} guesses!</h2>
-        {% endif %}
+        <div class="container text-center">
+            {% if count == 1 %}
+                <h2>You found the solution with your first guess!</h2>
+            {% else %}
+                <h2>You found the solution with {{ count }} guesses!</h2>
+            {% endif %}
+            
+            <h2>Score: {{ score }}</h2>
+        </div>
 
-        <h2>Score: {{ score }}</h2>
+
         
         <!-- High score notifications -->
-        {% if new_personal_high %}
-            <h2>You got a new personal high score!</h2>
-        {% endif %}
+        <div class="container text-center">
+            {% if new_personal_high %}
+                <h2>You got a new personal high score!</h2>
+            {% endif %}
+    
+            {% if new_high_score %}
+                <h2>Congradulations! You made it on the leaderboard!</h2>
+            {% endif %}
 
-        {% if new_high_score %}
-            <h2>Congradulations! You made it on the leaderboard!</h2>
-            
-        {% endif %}
+        </div>
 
         <!-- Leaderboard -->
-        <ol>
-        {% for spot in leaderboard %}
-            {% if spot[2] == new_score_id %}
-                <li style="color: chartreuse;">{{ spot[0] }}: {{ spot[1] }} new</li>
-            {% else %}
-                <li>{{ spot[0] }} : {{ spot[1] }}</li>
-            {% endif %}
-        {% endfor %}
-        </ol>
+        <h2 class="text-center my-3">Leaderboard</h2>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Rank</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for spot in leaderboard %}
+                        <tr>
+                            {% if spot[2] == new_score_id %}
+                                <td style="color: chartreuse;">{{ loop.index0 + 1 }}</td>
+                                <td style="color: chartreuse;">{{ spot[0] }}</td>
+                                <td style="color: chartreuse;">{{ spot[1] }} new</td>
+                            {% else %}
+                                <td>{{ loop.index0 + 1}}</td>
+                                <td>{{ spot[0] }}</td>
+                                <td>{{ spot[1] }}</td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <div class="container text-center">
+            <ol>
+            {% for spot in leaderboard %}
+            {% endfor %}
+            </ol>
+        </div>
 
     </div>
 {% endblock content %}

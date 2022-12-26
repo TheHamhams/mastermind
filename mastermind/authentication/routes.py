@@ -16,8 +16,11 @@ def admin():
 
 @auth.route('/admin/scores/<int:id>', methods=['DELETE'])
 def delete_score(id):
-    score = Scores.query.get(id).delete()
+    score = Scores.query.get(id)
+    db.session.delete(score)
     db.session.commit()
+    
+    return jsonify({})
 
 @auth.route('/admin/<string:id>', methods=['DELETE'])
 def delete(id):

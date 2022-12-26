@@ -128,7 +128,10 @@ def win(score):
         db.session.commit()
         new_high_score = True
         new_score_id = new.id
+        # Insert user score into leaderboard
         
+        leaderboard.append([user.username, score, new_score_id])
+        leaderboard.sort(key=lambda x: x[1], reverse=True)
     # Check leaderboard if it is full
     else:
         
@@ -146,9 +149,9 @@ def win(score):
             new_high_score=True
             
             # Insert user score into leaderboard
-            for idx in range(4):
-                if score > leaderboard[idx][1]:
-                    leaderboard.insert(idx, [user.username, score, new_score_id])
+            
+            leaderboard.append([user.username, score, new_score_id])
+            leaderboard.sort(key=lambda x: x[1], reverse=True)
             
     # Determine total guesses for front end
     count = 10 - guesses
