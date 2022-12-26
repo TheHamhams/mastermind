@@ -2,29 +2,57 @@
 
 {% block content %}
     <div class="container m-5">
-        <!-- Start game if logged in -->
-        <div class="container">
-            <h1>Start the game</h1>
-            {% if current_user.is_authenticated %}
-                <a href="{{ url_for('game.start') }}">
-                    <button class="btn btn-primary">Start</button>
-                </a>
-            {% else %}
-                <a href="{{ url_for('auth.login') }}">
-                    <button class="btn btn-primary">Start</button>
-                </a>
-            {% endif %}
+
+        <div class="container my-3 border p-3 col-8">
+            <h1 class="text-center">Start the game</h1>
+            <div class="d-flex">
+                <div class="column px-3">
+                    <img src="{{url_for('static', filename='images/keypad.jpg')}}" alt="keypad">
+                </div>
+                <div class="column px-3">
+                    <div class="row">
+                        <h4>Can you guess the correct combination before you run out of time?</h4>
+                        <br>
+                        <h4>Choose your difficuly and see if you can make it on the leaderboard!</h4>
+                        <br>
+                    </div>
+                    <div class="row text-center">
+                    <!-- Start game if logged in -->
+                    {% if current_user.is_authenticated %}
+                        <a href="{{ url_for('game.start') }}">
+                            <button class="btn btn-primary">Start</button>
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('auth.login') }}">
+                            <button class="btn btn-primary">Login</button>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </div>
         </div>
+
         <!-- Leaderboard -->
-        <div class="container">
-            <h2>Leaderboard</h2>
-            <ol>
-            {% for spot in leaderboard %}
-                <li>{{ spot[0] }} : {{ spot[1] }}</li>
-            {% endfor %}
-            </ol>
-        </div
-    
+        <div class="container my-3">
+            <h2 class="text-center my-3">Leaderboard</h2>
+            <table class="table table-bordered">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for spot in leaderboard %}
+                        <tr>
+                            <td>{{ spot[0] }}</td>
+                            <td>{{ spot[1] }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+                </table>
+                </div
 
     </div>
 

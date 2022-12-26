@@ -15,7 +15,7 @@ solution = []
 attempts = []
 leaderboard = []
 
-# Gloval functions
+# Global functions
 def reset():
     global solution, guesses, attempts
     guesses = 10
@@ -32,7 +32,7 @@ def create_leaderboard():
     return leaderboard
 
 @game.route('/start', methods=['GET', 'POST'])
-@login_required 
+@login_required
 def start():
     global solution, guesses, attempts
     
