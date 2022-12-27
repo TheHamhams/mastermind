@@ -3,28 +3,28 @@
 {% block content %}
     <div class="container m-5">
 
-        <div class="container my-3 border p-3 col-8">
+        <div class="container my-3 bord p-3 col-8">
             <h1 class="text-center">Start the game</h1>
             <div class="d-flex">
                 <div class="column px-3">
                     <img src="{{url_for('static', filename='images/keypad.jpg')}}" alt="keypad">
                 </div>
-                <div class="column px-3">
+                <div class="column p-3">
                     <div class="row">
-                        <h4>Can you guess the correct combination before you run out of time?</h4>
+                        <h4 class="p-1">Can you guess the correct combination before you run out of time?</h4>
                         <br>
-                        <h4>Choose your difficuly and see if you can make it on the leaderboard!</h4>
+                        <h4 class="p-1">Choose your difficuly and see if you can make it on the leaderboard!</h4>
                         <br>
                     </div>
                     <div class="row text-center">
                     <!-- Start game if logged in -->
                     {% if current_user.is_authenticated %}
                         <a href="{{ url_for('game.start') }}">
-                            <button class="btn btn-primary">Start</button>
+                            <button class="btn button-primary">Start</button>
                         </a>
                         {% else %}
                         <a href="{{ url_for('auth.login') }}">
-                            <button class="btn btn-primary">Login</button>
+                            <button class="btn button-primary">Login</button>
                         </a>
                         {% endif %}
                     </div>
@@ -36,7 +36,7 @@
         <!-- Leaderboard -->
         <div class="container my-3">
             <h2 class="text-center my-3">Leaderboard</h2>
-            <table class="table table-bordered">
+            <table class="table table-bordered text-light">
                 <thead class="thead-dark">
                     <tr>
                         <th scope="col">Rank</th>

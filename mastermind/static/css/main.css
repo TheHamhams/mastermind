@@ -1,3 +1,15 @@
+/* * {
+    border: 1px solid red;
+} */
+
+:root {
+    --deepest: #0c0032;
+    --deep: #190061;
+    --mid: #240090;
+    --purp: #0d0033;
+    --gray: #241c2c;
+}
+
 *,*:before,*::after{
     padding: 0;
     margin: 0;
@@ -6,4 +18,24 @@
 
 body {
     padding-top: 50px;
+    background-color: var(--gray);
+    color: white;
+}
+
+.bord {
+    border: 1px solid white;
+    border-radius: 10px;
+}
+
+.button-primary {
+    background-color: var(--mid);
+    color: white;
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.center {
+    margin-left: auto;
+    margin-right: auto;
 }
