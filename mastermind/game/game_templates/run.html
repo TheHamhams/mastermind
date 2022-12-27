@@ -1,39 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="p-5">
-    <div class="container">
-        <h3 class="text-center">Guesses Left: {{ guesses }}</h3>
-        <h3>Solution: {{ solution }}</h3>
+<div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+        <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+            <div class="card bg-dark text-white mt-5" style="border-radius: 1rem;">
+                <div class="container">
+                    <h3 class="text-center">Guesses Left: {{ guesses }}</h3>
+                    <h3>Solution: {{ solution }}</h3>
+                </div>
+                <div class="container  text-center col-6">
+                    <form method="POST" class="my-3">
+                        <!-- Easy -->
+                        <input class="m-2" type="number" name="num1" id="num1" value="0" min="0", max="7">
+                        <input class="m-2" type="number" name="num2" id="num2" value="0" min="0", max="7">
+                        <input class="m-2" type="number" name="num3" id="num3" value="0" min="0", max="7">
+                        <!-- Normal -->
+                        {% if num > 3 %}
+                            <input class="m-2" type="number" name="num4" id="num4" value="0" min="0", max="7">
+                        {% endif %}
+                        <!-- Hard -->
+                        {% if num > 4 %}
+                            <input  class="m-2" type="number" name="num5" id="num5" value="0" min="0", max="7">
+                        {% endif %}
+                        <br>
+                        <button type="submit" class="btn btn-primary my-3">Submit</button>
+                    </form>
+                </div>
+            <br>
+            <!-- Previous guesses -->
+            <div class="container text-center p-3 col-6">
+                <h4>
+                    Previous Guesses:
+                </h4>
+                {% for attempt in attempts %}
+                    {{ attempt }}
+                    <br>
+                {% endfor %}
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="container border text-center col-6">
-        <form method="POST" class="my-3">
-            <!-- Easy -->
-            <input class="m-2" type="number" name="num1" id="num1" value="0" min="0", max="7">
-            <input class="m-2" type="number" name="num2" id="num2" value="0" min="0", max="7">
-            <input class="m-2" type="number" name="num3" id="num3" value="0" min="0", max="7">
-            <!-- Normal -->
-            {% if num > 3 %}
-            <input class="m-2" type="number" name="num4" id="num4" value="0" min="0", max="7">
-            {% endif %}
-            <!-- Hard -->
-            {% if num > 4 %}
-            <input  class="m-2" type="number" name="num5" id="num5" value="0" min="0", max="7">
-            {% endif %}
-            <br>
-            <button type="submit" class="btn btn-primary my-3">Submit</button>
-        </form>
-    </div>
-    <br>
-    <div class="container border text-center p-3 col-6">
-        <h4>
-            Previous Guesses:
-        </h4>
-        {% for attempt in attempts %}
-            {{ attempt }}
-            <br>
-        {% endfor %}
-    </div>
 </div>
 {% endblock content %}
