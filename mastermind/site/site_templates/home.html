@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
 <section class="vh-50 gradient-custom">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -9,30 +10,30 @@
                     <div class="card-body p-5 text-center">
                     <div class="mb-md-5 mt-md-4 pb-5">
                         <h2 class="fw-bold mb-2 text-uppercase">Mastermind</h2>
-                                <div class="column p-3">
-                                    <img src="{{url_for('static', filename='images/keypad.jpg')}}" alt="keypad">
+                            <div class="column p-3">
+                                <img src="{{url_for('static', filename='images/keypad.jpg')}}" alt="keypad">
+                            </div>
+                            <div class="column p-3">
+                                <div class="row">
+                                    <h4 class="p-1">Can you guess the correct combination before you run out of time?</h4>
+                                    <br>
+                                    <h4 class="p-1">Choose your difficuly and see if you can make it on the leaderboard!</h4>
+                                    <br>
                                 </div>
-                                <div class="column p-3">
-                                    <div class="row">
-                                        <h4 class="p-1">Can you guess the correct combination before you run out of time?</h4>
-                                        <br>
-                                        <h4 class="p-1">Choose your difficuly and see if you can make it on the leaderboard!</h4>
-                                        <br>
-                                    </div>
-                                    <div class="row text-center">
-                                        {% if current_user.is_authenticated %}
-                                        <!-- Start game if logged in -->
-                                        <a href="{{ url_for('game.start') }}">
-                                            <button class="btn button-primary">Start</button>
-                                        </a>
-                                        {% else %}
-                                        <!-- Prompt login -->
-                                        <a href="{{ url_for('auth.login') }}">
-                                            <button class="btn button-primary">Login</button>
-                                        </a>
-                                        {% endif %}
-                                    </div>
+                                <div class="row text-center">
+                                    {% if current_user.is_authenticated %}
+                                    <!-- Start game if logged in -->
+                                    <a href="{{ url_for('game.start') }}">
+                                        <button class="btn button-primary">Start</button>
+                                    </a>
+                                    {% else %}
+                                    <!-- Prompt login -->
+                                    <a href="{{ url_for('auth.login') }}">
+                                        <button class="btn button-primary">Login</button>
+                                    </a>
+                                    {% endif %}
                                 </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -40,33 +41,32 @@
         </div>
     </div>
 </section>
-        <!-- Leaderboard -->
-        <section class="row d-flex justify-content-center align-items-center h-100">
-            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                <div class="card bg-dark text-white px-2" style="border-radius: 1rem;">
-                    <h2 class="text-center my-3">Leaderboard</h2>
-                    <table class="table table-bordered text-light">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th scope="col">Rank</th>
-                                <th scope="col">Username</th>
-                                <th scope="col">Score</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for spot in leaderboard %}
-                            <tr>
-                                <td>{{ loop.index0 + 1 }}</td>
-                                <td>{{ spot[0] }}</td>
-                                <td>{{ spot[1] }}</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
 
+<!-- Leaderboard -->
+<section class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card bg-dark text-white px-2" style="border-radius: 1rem;">
+            <h2 class="text-center my-3">Leaderboard</h2>
+            <table class="table table-bordered text-light">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Rank</th>
+                        <th scope="col">Username</th>
+                        <th scope="col">Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for spot in leaderboard %}
+                    <tr>
+                        <td>{{ loop.index0 + 1 }}</td>
+                        <td>{{ spot[0] }}</td>
+                        <td>{{ spot[1] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
+</section>
 
 {% endblock content %}

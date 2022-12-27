@@ -1,37 +1,46 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <div class="container p-5">
-        <div class="container text-center">
-            <h1>YOU WIN!</h1>
+<section class="vh-50 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-3 text-center">
+                        <div class="mb-md-5 mt-md-4 pb-1">
+                            <h2 class="fw-bold mb-2 text-uppercase">You Win!</h2>
+                            <!-- Results -->
+                            {% if count == 1 %}
+                                <h2>You found the solution with your first guess!</h2>
+                            {% else %}
+                                <h2>You found the solution with {{ count }} guesses!</h2>
+                            {% endif %}
+                            <h2>Score: {{ score }}</h2>
+                            <!-- High score notifications -->
+                            <div class="container text-center">
+                                {% if new_personal_high %}
+                                    <h2>You got a new personal high score!</h2>
+                                {% endif %}
+                            
+                                {% if new_high_score %}
+                                    <h2>Congradulations! You made it on the leaderboard!</h2>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- Results -->
-        <div class="container text-center">
-            {% if count == 1 %}
-                <h2>You found the solution with your first guess!</h2>
-            {% else %}
-                <h2>You found the solution with {{ count }} guesses!</h2>
-            {% endif %}
-            
-            <h2>Score: {{ score }}</h2>
-        </div>
+    </div>
+</section>
 
 
-        
-        <!-- High score notifications -->
-        <div class="container text-center">
-            {% if new_personal_high %}
-                <h2>You got a new personal high score!</h2>
-            {% endif %}
-    
-            {% if new_high_score %}
-                <h2>Congradulations! You made it on the leaderboard!</h2>
-            {% endif %}
 
-        </div>
-
-        <!-- Leaderboard -->
-        <h2 class="text-center my-3">Leaderboard</h2>
+<!-- Leaderboard -->
+<section class="row d-flex justify-content-center align-items-center h-100">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card bg-dark text-white px-2" style="border-radius: 1rem;">
+            <h2 class="text-center my-3">Leaderboard</h2>
             <table class="table table-bordered text-light">
                 <thead class="thead-dark">
                     <tr>
@@ -57,13 +66,28 @@
                 </tbody>
             </table>
         </div>
-
-        <div class="container text-center my-5">
-            <h2 class="pb-4">Try again?</h2>
-            <a href="{{ url_for('game.start') }}">
-                <button class="btn btn-primary">Start</button>
-            </a>
-        </div>
-
     </div>
+</section>
+
+<section class="vh-50 gradient-custom">
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-3 text-center">
+                        <div class="mb-md-5 mt-md-4 pb-1">
+                            <h2 class="fw-bold mb-4 text-uppercase">Try again?</h2>
+                            <a href="{{ url_for('game.start') }}">
+                                <button class="btn button-primary">Start</button>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
 {% endblock content %}
