@@ -1,0 +1,11 @@
+<form method="post">
+    {{ email_form.hidden_tag() }}
+    <div class="form-group">
+        <div class="form-outline form-white mb-4">
+            <label for="email">Email Address</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="Enter email" />
+        </div>
+
+        {{ email_form.submit_button(class='btn button-primary btn-outline-light') }}
+    </div>
+</form>
