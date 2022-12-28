@@ -35,7 +35,7 @@ def profile():
     email_form = UserEmailUpdate()
     username_form = UserUsernameUpdate()
     password_form = UserPasswordUpdate()
-    
+
     user = User.query.filter_by(email=current_user.email).first()
 
     score = user.high_score
@@ -69,7 +69,6 @@ def profile():
             user.password = generate_password_hash(new_password)
             db.session.commit()
             return redirect(url_for('auth.profile'))
-    
 
     return render_template('profile.html', title='Profile', score=score, username=username, email=email, email_form=email_form, username_form=username_form, password_form=password_form)
 
