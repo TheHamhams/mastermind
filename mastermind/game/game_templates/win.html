@@ -20,17 +20,20 @@
                             {% endif %}
                             <h2>Score: {{ score }}</h2>
                             <!-- High score notifications -->
-                            <div class="container text-center">
-                                {% if new_personal_high %}
-                                    <h2>You got a new personal high score!</h2>
-                                    <br>
-                                {% endif %}
+                            {% if new_personal_high %}
+                                <h2>You got a new personal high score!</h2>
+                                <br>
+                            {% endif %}
 
-                                {% if new_high_score %}
-                                    <h2>Congradulations! You made it on the leaderboard!</h2>
-                                    <br>
-                                {% endif %}
-                            </div>
+                            {% if new_high_score %}
+                                <h2>Congradulations! You made it on the leaderboard!</h2>
+                                <br>
+                            {% endif %}
+                            <!-- Streak notifications -->
+                            <h2>Current win streak: {{ current_streak }}</h2>
+                            {% if new_high_streak %}
+                                <h2>You are on a new personal best streak!</h2>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
-from mastermind.models import User, Scores, db
+from mastermind.models import User, Scores, Streaks, db
 import requests
 import dataset
 # from stuf import stuf
@@ -12,6 +12,7 @@ guesses = 10
 solution = []
 attempts = []
 leaderboard = []
+streakboard = []
 
 # Global functions
 def reset():
@@ -28,6 +29,15 @@ def create_leaderboard():
     for row in scores:
         leaderboard.append([row['username'], row['score'], row['id']])
     return leaderboard
+
+def create_streakboard():
+    global streakboard
+    streakboard = []
+    con = dataset.connect('sqlite:///instance/site.db')
+    scores = con.query('SELECT username, streak, id FROM streaks ORDER BY streak DESC')
+    for row in scores:
+        streakboard.append([row['username'], row['streak'], row['id']])
+    return streakboard
 
 @game.route('/start', methods=['GET', 'POST'])
 @login_required
@@ -105,12 +115,25 @@ def run(num):
 @game.route('/win/<int:score>')
 @login_required
 def win(score):
+    # Variables
     global guesses, leaderboard
     new_high_score = False
+    new_high_streak = False
     new_personal_high = False
     new_score_id = 0
     user = User.query.filter_by(email=current_user.email).first()
+    # Add to current streak
+    user.current_streak += 1
+    db.session.commit()
+    current_streak = user.current_streak
+    # Create leaderboard
     create_leaderboard()
+
+    # Check is current streak is higher than highest streak
+    if user.current_streak > user.highest_streak:
+        # Replace highest_streak with streak
+        user.highest_streak = user.current_streak
+        new_high_streak = True
 
     # Check for user high score
     if score > user.high_score:
@@ -152,11 +175,56 @@ def win(score):
     # Determine total guesses for front end
     count = 10 - guesses
 
-    return render_template('win.html', user=current_user, title='WINNER', count=count, score=score, new_high_score=new_high_score, leaderboard=leaderboard, new_personal_high=new_personal_high, new_score_id=new_score_id)
+    return render_template('win.html', user=current_user, title='WINNER', count=count, score=score, new_high_score=new_high_score, leaderboard=leaderboard, new_personal_high=new_personal_high, new_score_id=new_score_id, current_streak=current_streak, new_high_streak=new_high_streak)
 
 # Loss condition
 @game.route('/lose')
 @login_required
 def lose():
-    global solution
-    return render_template('lose.html', title='Loser', user=current_user, solution=solution)
+    # Variables
+    global solution, streakboard
+    user = User.query.filter_by(email=current_user.email).first()
+    new_high_streak = False
+    streak = user.current_streak
+    # Create streakboard
+    create_streakboard()
+
+    # Check is current streak is higher than highest streak
+    if streak > user.highest_streak:
+        # Replace highest_streak with streak
+        user.highest_streak = streak
+
+    # Check if there is room on the streakboard
+    if len(leaderboard) < 5:
+        new = Streaks(username=user.username, user_id=user.id, streak = streak)
+        db.session.add(new)
+        db.session.commit()
+        new_high_streak = True
+        new_streak_id = new.id
+        # Insert user streak into streakboard
+        streakboard.append([user.username, streak, new_streak_id])
+        streakboard.sort(key=lambda x: x[1], reverse=True)
+
+    else:
+        # Remove lowest streakboard score if user score is larger
+        if streak > streakboard[-1][1]:
+            removed = streakboard.pop()
+
+            # Add new streak to db and remove lowest score
+            new_streakboard_score = Streaks(user.username, user.id, streak)
+            db.session.add(new_streakboard_score)
+            streakboard_score_to_remove = Streaks.query.get(removed[2])
+            db.session.delete(streakboard_score_to_remove)
+            db.session.commit()
+            new_streak_id = new_streakboard_score.id
+            new_high_streak=True
+
+            # Insert user score into streakboard
+            streakboard.append([user.username, streak, new_streak_id])
+            streakboard.sort(key=lambda x: x[1], reverse=True)
+
+    # Reset user streak
+    user.current_streak = 0
+    db.session.commit()
+
+    return render_template('lose.html', title='Loser', user=current_user, solution=solution, streak = user.highest_streak, new_high_streak=new_high_streak, new_streak_id=new_streak_id, streakboard=streakboard)
