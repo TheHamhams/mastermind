@@ -88,7 +88,7 @@ def login():
             if user and check_password_hash(user.password, password):
                 login_user(user)
 
-                flash(f'You have successfully logged in {email}', category='error')
+                flash(f'You have successfully logged in {email}', category='success')
                 return redirect(url_for('site.home'))
             else:
                 flash('User info not found', category='error')
