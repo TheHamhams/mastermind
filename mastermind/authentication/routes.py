@@ -41,6 +41,8 @@ def profile():
     score = user.high_score
     username = user.username
     email = user.email
+    current_streak = user.current_streak
+    highest_streak = user.highest_streak
 
     if request.method == 'POST' and email_form.validate_on_submit():
         new_email = email_form.email.data
@@ -70,7 +72,7 @@ def profile():
             db.session.commit()
             return redirect(url_for('auth.profile'))
 
-    return render_template('profile.html', title='Profile', score=score, username=username, email=email, email_form=email_form, username_form=username_form, password_form=password_form)
+    return render_template('profile.html', title='Profile', score=score, username=username, email=email, current_streak=current_streak, highest_streak=highest_streak, email_form=email_form, username_form=username_form, password_form=password_form)
 
 # Login page
 @auth.route('/login', methods=['GET', 'POST'])

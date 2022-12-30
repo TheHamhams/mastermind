@@ -13,11 +13,16 @@
                             <!-- Solution -->
                             <h3>Solution: {{ solution }}</h3>
                             <br>
+                            <h3>Your streak ended at {{ streak }}</h3>
+                            <br>
+                            {% if new_high_streak %}
+                                <h3>Congradulations, you earned a new Highest Streak!</h3>
+                            {% endif %}
                             <!-- Restart option -->
                             <h2 class="fw-bold mb-2 text-uppercase">Try again?</h2>
                             <br>
                             <a href="{{ url_for('game.start') }}">
-                                <button class="btn btn-primary">Start</button>
+                                <button class="btn button-primary">Start</button>
                             </a>
                         </div>
                     </div>

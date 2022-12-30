@@ -10,15 +10,17 @@ game = Blueprint('game', __name__, template_folder='game_templates')
 # Global variables
 guesses = 10
 solution = []
+solution_string = ''
 attempts = []
 leaderboard = []
 streakboard = []
 
 # Global functions
 def reset():
-    global solution, guesses, attempts
+    global solution, guesses, attempts, solution_string
     guesses = 10
     solution = []
+    solution_string = ''
     attempts = []
 
 def create_leaderboard():
@@ -43,7 +45,6 @@ def create_streakboard():
 @login_required
 def start():
     global solution, guesses, attempts
-
     reset()
 
     return render_template('start.html', title='Start', user=current_user)
@@ -52,7 +53,7 @@ def start():
 @game.route('/game/<int:num>', methods=['GET', 'POST'])
 @login_required
 def run(num):
-    global solution, guesses, attempts
+    global solution, solution_string, guesses, attempts
     nums = 0
     spots = 0
 
@@ -66,6 +67,7 @@ def run(num):
 
         for idx in range(len(solution)):
             solution[idx] = int(solution[idx])
+            solution_string += str(solution[idx])
 
     # Game functionality
     if request.method == "POST":
@@ -81,7 +83,7 @@ def run(num):
         # Check for correct solution
         if guess == solution:
             score = guesses * num
-            return redirect(url_for('game.win', score=score))
+            return redirect(url_for('game.win', score=score, verify=solution_string))
 
         # Check for correct locations
         for idx in range(len(guess)):
@@ -112,9 +114,14 @@ def run(num):
     return render_template('run.html', title='Game', user=current_user, solution=solution, guesses=guesses, attempts=attempts, nums=nums, spots=spots, num=num)
 
 # Win condition
-@game.route('/win/<int:score>')
+@game.route('/win/<int:score>/<string:verify>')
 @login_required
-def win(score):
+def win(score, verify):
+    global solution, solution_string
+    # Check for cheating
+    if verify != solution_string or solution_string == '':
+        reset()
+        return redirect(url_for('game.cheat'))
     # Variables
     global guesses, leaderboard
     new_high_score = False
@@ -193,13 +200,13 @@ def lose():
     if streak > user.highest_streak:
         # Replace highest_streak with streak
         user.highest_streak = streak
+        new_high_streak = True
 
     # Check if there is room on the streakboard
-    if len(leaderboard) < 5:
+    if len(streakboard) < 5:
         new = Streaks(username=user.username, user_id=user.id, streak = streak)
         db.session.add(new)
         db.session.commit()
-        new_high_streak = True
         new_streak_id = new.id
         # Insert user streak into streakboard
         streakboard.append([user.username, streak, new_streak_id])
@@ -217,7 +224,6 @@ def lose():
             db.session.delete(streakboard_score_to_remove)
             db.session.commit()
             new_streak_id = new_streakboard_score.id
-            new_high_streak=True
 
             # Insert user score into streakboard
             streakboard.append([user.username, streak, new_streak_id])
@@ -227,4 +233,9 @@ def lose():
     user.current_streak = 0
     db.session.commit()
 
-    return render_template('lose.html', title='Loser', user=current_user, solution=solution, streak = user.highest_streak, new_high_streak=new_high_streak, new_streak_id=new_streak_id, streakboard=streakboard)
+    return render_template('lose.html', title='Loser', user=current_user, solution=solution, streak = streak, new_high_streak=new_high_streak, new_streak_id=new_streak_id, streakboard=streakboard)
+
+# Cheat page
+@game.route('/cheat')
+def cheat():
+    return render_template('cheat.html', title='Cheat')
