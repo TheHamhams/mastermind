@@ -4,6 +4,7 @@ from mastermind.helpers import secret_key_required
 
 api = Blueprint('api', __name__, url_prefix='/admin')
 
+# DELETE score
 @api.route('/scores/<int:id>', methods=['DELETE'])
 @secret_key_required
 def delete_score(current_secret_key, id):
@@ -14,6 +15,7 @@ def delete_score(current_secret_key, id):
 
     return jsonify({})
 
+# DELETE streak
 @api.route('/streaks/<int:id>', methods=['DELETE'])
 @secret_key_required
 def delete_streak(current_secret_key, id):
@@ -24,6 +26,7 @@ def delete_streak(current_secret_key, id):
 
     return jsonify({})
 
+# DELETE user
 @api.route('/<string:username>', methods=['DELETE'])
 @secret_key_required
 def delete(current_secret_key, username):

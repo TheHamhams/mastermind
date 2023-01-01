@@ -5,6 +5,9 @@ import os
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
 def secret_key_required(flask_function):
+    '''
+    Require the secret key to be sent to authorize admin api routes
+    '''
     @wraps(flask_function)
 
     def decorated(*args, **kwargs):
@@ -12,11 +15,12 @@ def secret_key_required(flask_function):
 
         if 'x-access-token' in request.headers:
             current_secret_key = request.headers['x-access-token'].split(' ')[1]
-            print(current_secret_key)
-            print(SECRET_KEY)
+
+        # Check if secret key was sent
         if not current_secret_key:
             return jsonify({'message': 'Access key is missing'}), 401
 
+        # Check if sent secret key matches the secret key
         if current_secret_key != SECRET_KEY:
             return jsonify({'message': 'Invalid access key'})
 
