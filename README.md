@@ -25,7 +25,7 @@ Install dependencies
   virtualenv venv
   source venv/Scripts/activate
 ```
-Install the reqirements.\
+Install the reqirements.
 ```bash
   pip install requirements.txt
 ```

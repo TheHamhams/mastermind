@@ -1,33 +1,11 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, jsonify
-from mastermind.models import User, db, check_password_hash, users_schema, Scores
+from flask import Blueprint, render_template, request, flash, redirect, url_for
+from mastermind.models import User, db, check_password_hash
 
 from werkzeug.security import check_password_hash, generate_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from mastermind.forms import UserLoginForm, UserSignupForm, UserEmailUpdate, UserUsernameUpdate, UserPasswordUpdate
 
 auth = Blueprint('auth', __name__, template_folder='auth_templates')
-
-@auth.route('/admin')
-def admin():
-    users = User.query.all()
-
-    result = users_schema.dump(users)
-    return jsonify(result)
-
-@auth.route('/admin/scores/<int:id>', methods=['DELETE'])
-def delete_score(id):
-    score = Scores.query.get(id)
-    db.session.delete(score)
-    db.session.commit()
-
-    return jsonify({})
-
-@auth.route('/admin/<string:id>', methods=['DELETE'])
-def delete(id):
-    user = User.query.filter_by(username = id).delete()
-
-    db.session.commit()
-    return jsonify({})
 
 # Profile page
 @auth.route('/profile', methods=['GET', 'POST'])
