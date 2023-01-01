@@ -3,42 +3,55 @@ from flask_login import login_required, current_user
 from mastermind.models import User, Scores, Streaks, db
 import requests
 import dataset
-# from stuf import stuf
+import secrets
 
 game = Blueprint('game', __name__, template_folder='game_templates')
 
 # Global variables
 guesses = 10
 solution = []
-solution_string = ''
+token = ''
 attempts = []
 leaderboard = []
 streakboard = []
 
 # Global functions
 def reset():
-    global solution, guesses, attempts, solution_string
+    '''
+    Create a new game state by resetting global variables
+    '''
+    global solution, guesses, attempts, token
     guesses = 10
     solution = []
-    solution_string = ''
+    token = ''
     attempts = []
 
 def create_leaderboard():
+    '''
+    Generate and return updated leaderboard
+    '''
     global leaderboard
     leaderboard = []
     con = dataset.connect('sqlite:///instance/site.db')
     scores = con.query('SELECT username, score, id FROM scores ORDER BY score DESC')
+
     for row in scores:
         leaderboard.append([row['username'], row['score'], row['id']])
+
     return leaderboard
 
 def create_streakboard():
+    '''
+    Generate and return updated streakboard
+    '''
     global streakboard
     streakboard = []
     con = dataset.connect('sqlite:///instance/site.db')
     scores = con.query('SELECT username, streak, id FROM streaks ORDER BY streak DESC')
+
     for row in scores:
         streakboard.append([row['username'], row['streak'], row['id']])
+
     return streakboard
 
 @game.route('/start', methods=['GET', 'POST'])
@@ -53,7 +66,7 @@ def start():
 @game.route('/game/<int:num>', methods=['GET', 'POST'])
 @login_required
 def run(num):
-    global solution, solution_string, guesses, attempts
+    global solution, token, guesses, attempts
     nums = 0
     spots = 0
 
@@ -67,7 +80,9 @@ def run(num):
 
         for idx in range(len(solution)):
             solution[idx] = int(solution[idx])
-            solution_string += str(solution[idx])
+
+        # Create verification token for win page
+        token = secrets.token_urlsafe(16)
 
     # Game functionality
     if request.method == "POST":
@@ -83,7 +98,7 @@ def run(num):
         # Check for correct solution
         if guess == solution:
             score = guesses * num
-            return redirect(url_for('game.win', score=score, verify=solution_string))
+            return redirect(url_for('game.win', score=score, verify=token))
 
         # Check for correct locations
         for idx in range(len(guess)):
@@ -117,22 +132,24 @@ def run(num):
 @game.route('/win/<int:score>/<string:verify>')
 @login_required
 def win(score, verify):
-    global solution, solution_string
+    global solution, token, guesses, leaderboard
     # Check for cheating
-    if verify != solution_string or solution_string == '':
+    if verify != token or token == '':
         reset()
         return redirect(url_for('game.cheat'))
+
     # Variables
-    global guesses, leaderboard
     new_high_score = False
     new_high_streak = False
     new_personal_high = False
     new_score_id = 0
     user = User.query.filter_by(email=current_user.email).first()
+
     # Add to current streak
     user.current_streak += 1
     db.session.commit()
     current_streak = user.current_streak
+
     # Create leaderboard
     create_leaderboard()
 
@@ -155,10 +172,11 @@ def win(score, verify):
         db.session.commit()
         new_high_score = True
         new_score_id = new.id
-        # Insert user score into leaderboard
 
+        # Insert user score into leaderboard
         leaderboard.append([user.username, score, new_score_id])
         leaderboard.sort(key=lambda x: x[1], reverse=True)
+
     # Check leaderboard if it is full
     else:
 
@@ -181,6 +199,7 @@ def win(score, verify):
 
     # Determine total guesses for front end
     count = 10 - guesses
+    reset()
 
     return render_template('win.html', user=current_user, title='WINNER', count=count, score=score, new_high_score=new_high_score, leaderboard=leaderboard, new_personal_high=new_personal_high, new_score_id=new_score_id, current_streak=current_streak, new_high_streak=new_high_streak)
 
@@ -193,6 +212,7 @@ def lose():
     user = User.query.filter_by(email=current_user.email).first()
     new_high_streak = False
     streak = user.current_streak
+
     # Create streakboard
     create_streakboard()
 
@@ -208,6 +228,7 @@ def lose():
         db.session.add(new)
         db.session.commit()
         new_streak_id = new.id
+
         # Insert user streak into streakboard
         streakboard.append([user.username, streak, new_streak_id])
         streakboard.sort(key=lambda x: x[1], reverse=True)
