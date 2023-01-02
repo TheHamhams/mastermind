@@ -54,6 +54,9 @@ def create_streakboard():
 
     return streakboard
 
+# Game Routes
+
+# Choose game difficulty and reset global variables
 @game.route('/start', methods=['GET', 'POST'])
 @login_required
 def start():
@@ -78,6 +81,7 @@ def run(num):
         solution = data.split('\n')
         solution.pop()
 
+        # Turn solution into an array of ints
         for idx in range(len(solution)):
             solution[idx] = int(solution[idx])
 
@@ -119,9 +123,6 @@ def run(num):
             feedback = f"{nums} correct number(s) and {spots} correct location(s)"
         attempts.insert(0, f'{guess} {feedback}')
 
-        nums = 0
-        spots = 0
-
         # Loss condition
         if guesses == 0:
             return redirect(url_for('game.lose'))
@@ -133,6 +134,7 @@ def run(num):
 @login_required
 def win(score, verify):
     global solution, token, guesses, leaderboard
+
     # Check for cheating
     if verify != token or token == '':
         reset()

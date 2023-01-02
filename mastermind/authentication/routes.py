@@ -9,6 +9,7 @@ auth = Blueprint('auth', __name__, template_folder='auth_templates')
 
 # Profile page
 @auth.route('/profile', methods=['GET', 'POST'])
+@login_required
 def profile():
     # Forms for updating profile info
     email_form = UserEmailUpdate()
@@ -136,7 +137,7 @@ def signup():
             return redirect(url_for('auth.login'))
 
     except:
-        flash('Invalid form data: Please check your form')
+        flash('Invalid form data: Please check your form', 'error')
 
     return render_template('signup.html', title="Sign Up", form=form, user=current_user)
 

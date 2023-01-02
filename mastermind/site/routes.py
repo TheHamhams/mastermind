@@ -1,10 +1,6 @@
-from flask import Blueprint, render_template, request, flash, jsonify
-from flask_login import login_required, current_user
-# from models import db
-import json
+from flask import Blueprint, render_template
+from flask_login import current_user
 from mastermind.game.routes import create_leaderboard, create_streakboard
-
-
 
 site = Blueprint('site', __name__, template_folder='site_templates')
 

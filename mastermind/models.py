@@ -1,17 +1,16 @@
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager
-from flask_marshmallow import Marshmallow
 from werkzeug.security import generate_password_hash, check_password_hash
-from uuid import uuid4, uuid3
+from uuid import uuid4
 
 login_manager = LoginManager()
 db = SQLAlchemy()
-ma = Marshmallow()
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(user_id)
 
+# User table
 class User(db.Model, UserMixin):
     id = db.Column(db.String, primary_key = True)
     username = db.Column(db.String(15), unique=True)
@@ -21,6 +20,7 @@ class User(db.Model, UserMixin):
     current_streak = db.Column(db.Integer, default=0)
     highest_streak = db.Column(db.Integer, default=0)
     leaderboard = db.relationship('Scores')
+    streakboard = db.relationship('Streaks')
 
     def __init__(self, username, email, password):
         self.id = self.set_id()
@@ -34,13 +34,7 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f"{self.username}, {self.email}"
 
-class UserSchema(ma.Schema):
-    class Meta:
-        fields = ['id', 'username', 'email', 'password', 'active', 'current']
-
-user_schema = UserSchema()
-users_schema = UserSchema(many=True)
-
+# Scores table for leaderboard
 class Scores(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(15))
@@ -52,12 +46,7 @@ class Scores(db.Model):
         self.user_id = user_id
         self.score = score
 
-class ScoresSchema(ma.Schema):
-    class Meta:
-        fields = ['score']
-
-scores_schema = ScoresSchema(many=True)
-
+# Streaks table for streakboard
 class Streaks(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(15))
