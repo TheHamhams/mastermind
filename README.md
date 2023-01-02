@@ -25,18 +25,17 @@ Create and activate virtual environment (virtualenv Windows)
   virtualenv venv
   source venv/Scripts/activate
 ```
-or
 Create and activate virtual environment (virtualenv Linux)
 
 ```bash
   virtualenv venv
   source venv/bin/activate
 ```
-Install the reqirements.
+Install requirements
 ```bash
-  pip install requirements.txt
+  pip install -r requirements.txt
 ```
-Next create a .env file. It should contain the following information.
+Next create a .env file in current directory. It should contain the following information.
 ```bash
   FLASK_APP=mastermind
   SQLALCHEMY_DATABASE_URI=sqlite:///site.db
