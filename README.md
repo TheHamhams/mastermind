@@ -16,14 +16,21 @@ Clone the project
 Go to the project directory
 
 ```bash
-  cd my-project
+  cd mastermind
 ```
 
-Install dependencies
+Create and activate virtual environment (virtualenv Windows)
 
 ```bash
   virtualenv venv
   source venv/Scripts/activate
+```
+or
+Create and activate virtual environment (virtualenv Linux)
+
+```bash
+  virtualenv venv
+  source venv/bin/activate
 ```
 Install the reqirements.
 ```bash
