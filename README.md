@@ -57,14 +57,14 @@ Finally, the app can be ran from the terminal.
 ```
 ## Getting Started
 #### Go To Sign Up Page
-![Home Page](mastermind\static\images\readme_home.png)
+<img src='mastermind/static/images/readme_home.png' width=500>
 #### Create an account
-![Home Page](mastermind\static\images\readme_signup.png)
+<img src='mastermind/static/images/readme_signup.png' width=500>
 #### Login
-![Home Page](mastermind\static\images\readme_login.png)
+<img src='mastermind/static/images/readme_login.png' width=500>
 #### Click Start
-![Home Page](mastermind\static\images\readme_start.png)
+<img src='mastermind/static/images/readme_start.png' width=500>
 #### Choose a Difficulty
-![Home Page](mastermind\static\images\readme_normal.png)
+<img src='mastermind/static/images/readme_normal.png' width=500>
 #### Play The Game
-![Home Page](mastermind\static\images\readme_play.png)
+<img src='mastermind/static/images/readme_play.png' width=500>
