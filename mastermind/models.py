@@ -38,7 +38,7 @@ class User(db.Model, UserMixin):
 class Scores(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(15))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.String, db.ForeignKey('user.id'))
     score = db.Column(db.Integer)
 
     def __init__(self, username, user_id, score):
@@ -50,7 +50,7 @@ class Scores(db.Model):
 class Streaks(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.String(15))
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.String, db.ForeignKey('user.id'))
     streak = db.Column(db.Integer)
 
     def __init__(self, username, user_id, streak):
