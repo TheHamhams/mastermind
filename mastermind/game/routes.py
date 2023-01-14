@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from flask_login import login_required, current_user
 from mastermind.models import User, Scores, Streaks, db
+from sqlalchemy import desc
 import requests
 import dataset
 import secrets
@@ -32,11 +33,9 @@ def create_leaderboard():
     '''
     global leaderboard
     leaderboard = []
-    con = dataset.connect('sqlite:///instance/site.db')
-    scores = con.query('SELECT username, score, id FROM scores ORDER BY score DESC')
+    scores = db.session.query(Scores).order_by(desc(Scores.score)).all()
 
-    for row in scores:
-        leaderboard.append([row['username'], row['score'], row['id']])
+    leaderboard = [[row.username, row.score, row.id] for row in scores]
 
     return leaderboard
 
@@ -46,11 +45,9 @@ def create_streakboard():
     '''
     global streakboard
     streakboard = []
-    con = dataset.connect('sqlite:///instance/site.db')
-    scores = con.query('SELECT username, streak, id FROM streaks ORDER BY streak DESC')
+    streaks = db.session.query(Streaks).order_by(desc(Streaks.streak)).all()
 
-    for row in scores:
-        streakboard.append([row['username'], row['streak'], row['id']])
+    streakboard = [[row.username, row.streak, row.id] for row in streaks]
 
     return streakboard
 
